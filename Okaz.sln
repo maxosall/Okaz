@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okaz.Models", "Okaz.Models\Okaz.Models.csproj", "{0DB51BD7-451E-4F04-B211-9A25E233E0AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okaz.API", "Okaz.API\Okaz.API.csproj", "{97A7384B-73D9-4D17-9884-5DFB0BC588E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DB51BD7-451E-4F04-B211-9A25E233E0AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB51BD7-451E-4F04-B211-9A25E233E0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB51BD7-451E-4F04-B211-9A25E233E0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB51BD7-451E-4F04-B211-9A25E233E0AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97A7384B-73D9-4D17-9884-5DFB0BC588E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97A7384B-73D9-4D17-9884-5DFB0BC588E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97A7384B-73D9-4D17-9884-5DFB0BC588E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97A7384B-73D9-4D17-9884-5DFB0BC588E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
