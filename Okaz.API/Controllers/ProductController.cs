@@ -17,35 +17,34 @@ namespace Okaz.API.Controllers
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<Product>), 200)]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    [ProducesResponseType(typeof(IEnumerable<ProductDTO>), 200)]
+    public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
     {
       var products = await _repository.GetAll();
       return Ok(products);
     }
 
-    [ProducesResponseType(typeof(Product), 200)]
+    [ProducesResponseType(typeof(ProductDTO), 200)]
     [ProducesResponseType(404)]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
       var product = await _repository.GetByIdAsync(id);
-      if (product == null)
-      {
-        return NotFound();
-      }
+      
+      if (product == null) return NotFound();
+      
       return Ok(product);
     }
 
     [HttpPost]
     [ProducesResponseType(typeof(Product), 201)]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<Product>> CreateProduct(ProductCreateDTO dto)
+    public async Task<ActionResult<Product>> CreateProduct(ProductCreateDTO request)
     {
       if (!ModelState.IsValid) return BadRequest(ModelState);
       try
       {
-        var product = await _repository.AddAsync(dto);
+        var product = await _repository.AddAsync(request);
         return CreatedAtAction(
             nameof(GetProduct), new { id = product.ProductId }, product);
       }
@@ -57,13 +56,13 @@ namespace Okaz.API.Controllers
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, ProductCreateDTO dto)
+    public async Task<IActionResult> UpdateProduct(int id, ProductCreateDTO request)
     {
-      if (id != dto.ProductId)
+      if (id != request.ProductId)
       {
         return BadRequest();
       }
-      var product = await _repository.Update(dto);
+      var product = await _repository.Update(request);
       if (product == null)
       {
         return NotFound();

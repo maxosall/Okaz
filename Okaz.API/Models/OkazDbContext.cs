@@ -22,6 +22,8 @@ public class OkazDbContext: DbContext
 	public OkazDbContext(DbContextOptions<OkazDbContext> options)
         :base(options)
     {
+        ChangeTracker.AutoDetectChangesEnabled = false;
+
         // productFaker = new Faker<Product>()
         // .RuleFor(p => p.ProductId, f => f.IndexFaker)
         // .RuleFor(p => p.Name, f => f.Commerce.ProductName())

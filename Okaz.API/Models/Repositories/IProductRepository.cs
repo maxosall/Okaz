@@ -5,9 +5,9 @@ namespace Okaz.API.Models.Repositories
 {
   public interface IProductRepository
   {
-    Task<IEnumerable<Product>> GetAll();
+    Task<IEnumerable<ProductDTO>> GetAll();
 
-    Task<Product> GetByIdAsync(int id);
+    Task<ProductDTO> GetByIdAsync(int id);
 
     Task<Product> AddAsync(ProductCreateDTO entity);
 

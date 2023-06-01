@@ -19,12 +19,12 @@ public class ProductRepository : IProductRepository
   }
 
 
-  public async Task<Product> AddAsync(ProductCreateDTO dto)
+  public async Task<Product> AddAsync(ProductCreateDTO request)
   {
-    if (dto == null)
-      throw new ArgumentNullException(nameof(dto));
+    if (request == null)
+      throw new ArgumentNullException(nameof(request));
     
-    var product = _mapper.Map<Product>(dto);
+    var product = _mapper.Map<Product>(request);
 
     var result = await _context.Products.AddAsync(product);
     await _context.SaveChangesAsync();
@@ -45,18 +45,25 @@ public class ProductRepository : IProductRepository
     // return Task.CompletedTask;  
   }
 
-  public async Task<IEnumerable<Product>> GetAll()
+  public async Task<IEnumerable<ProductDTO>> GetAll()
   {
-    return await _context.Products
-    .Include(p=> p.Category)
-    .ToListAsync();
+    var products = await _context.Products
+      .Include(p=> p.Category)
+      .ToListAsync();
+
+    var results= _mapper.Map<IEnumerable<ProductDTO>>(products); 
+
+    return results;  
   }
 
-  public async Task<Product> GetByIdAsync(int id)
+  public async Task<ProductDTO> GetByIdAsync(int id)
   {
-    return await _context.Products
+    var product =  await _context.Products
       .Include(p => p.Category)
       .FirstOrDefaultAsync(x => x.ProductId == id);
+    if(product == null ) return null;
+
+    return _mapper.Map<ProductDTO>(product);
   }
 
   public async Task<Product> Update(ProductCreateDTO dto)
