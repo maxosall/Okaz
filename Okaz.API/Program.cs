@@ -1,10 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Okaz.API.Models.DTOs;
-using Okaz.API.Models.Repositories;
-using Okaz.Okaz.API.Models;
-using Okaz.Okaz.API.Models.DTOs;
-using Okaz.Okaz.API.Models.Repositories;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Okaz.API.Models.Repositories;
+using Okaz.Okaz.API.Extensions;
+using Okaz.Okaz.API.Models;
+using Okaz.Okaz.API.Models.Repositories;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +13,9 @@ builder.Services.AddDbContextPool<OkazDbContext>(options =>
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddAutoMapper(profileAssemblyMarkerTypes: typeof(CategoryProfile));
-builder.Services.AddAutoMapper(profileAssemblyMarkerTypes: typeof(ProductProfile));
 
+builder.AddAutoMapperProfiles();
+builder.Services.AddRepositories();
 // builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
