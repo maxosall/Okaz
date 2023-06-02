@@ -13,7 +13,7 @@ namespace Okaz.API.Controllers
 
     public ProductController(IProductRepository repository)
     {
-      this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
+      _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     [HttpGet]

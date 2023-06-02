@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Okaz.API.Extensions;
 using Okaz.API.Models.Repositories;
 using Okaz.Okaz.API.Extensions;
 using Okaz.Okaz.API.Models;
@@ -11,12 +12,10 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextPool<OkazDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("OkazDB")));
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.AddAutoMapperProfiles();
 builder.Services.AddRepositories();
-// builder.Services.AddControllers();
+
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
