@@ -7,11 +7,11 @@ namespace Okaz.API.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class ProductController : ControllerBase
+  public class ProductsController : ControllerBase
   {
     private readonly IProductRepository _repository;
 
-    public ProductController(IProductRepository repository)
+    public ProductsController(IProductRepository repository)
     {
       _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }

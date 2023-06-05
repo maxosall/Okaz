@@ -9,7 +9,7 @@ using Okaz.API.Extensions;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 //  Add services to the container.
-builder.Services.AddDbContextPool<OkazDbContext>(options =>
+builder.Services.AddDbContext<OkazDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("OkazDB")));
 
 

@@ -1,0 +1,27 @@
+@page "/index"
+@page "/products/index"
+@inherits IndexBase
+
+<PageTitle>Products</PageTitle>
+
+<h1 class="text-blue-800"> product list</h1>
+@if (Products == null)
+{
+    <div class="flex items-center justify-center">
+        <p class="">No Product Found</p>
+    </div>
+}
+else
+{
+    <div class="flex flex-wrap gap-4" >
+        @foreach(var product in Products)
+        {
+            
+          <div class="w-[5rem]">
+            <h3 class="">@product.Name</h3> 
+            <img src="@product.ImageUrl"/>
+            <p class="">@product.Description</p> 
+          </div>
+        }    
+    </div>
+}
