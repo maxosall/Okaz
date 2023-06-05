@@ -1,6 +1,6 @@
 using AutoMapper;
 using Okaz.Models;
-using Okaz.Okaz.API.Models.DTOs;
+using Okaz.API.Models.DTOs;
 
 namespace Okaz.API.Models.DTOs;
 

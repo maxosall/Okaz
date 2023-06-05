@@ -1,8 +1,8 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Okaz.Models;
-using Okaz.Okaz.API.Models;
-using Okaz.Okaz.API.Models.DTOs;
+using Okaz.API.Models;
+using Okaz.API.Models.DTOs;
 // using System.Threading.Task;
 
 namespace Okaz.API.Models.Repositories;
@@ -23,7 +23,7 @@ public class ProductRepository : IProductRepository
   {
     if (request == null)
       throw new ArgumentNullException(nameof(request));
-    
+
     var product = _mapper.Map<Product>(request);
 
     var result = await _context.Products.AddAsync(product);
@@ -48,20 +48,20 @@ public class ProductRepository : IProductRepository
   public async Task<IEnumerable<ProductDTO>> GetAll()
   {
     var products = await _context.Products
-      .Include(p=> p.Category)
+      .Include(p => p.Category)
       .ToListAsync();
 
-    var results= _mapper.Map<IEnumerable<ProductDTO>>(products); 
+    var results = _mapper.Map<IEnumerable<ProductDTO>>(products);
 
-    return results;  
+    return results;
   }
 
   public async Task<ProductDTO> GetByIdAsync(int id)
   {
-    var product =  await _context.Products
+    var product = await _context.Products
       .Include(p => p.Category)
       .FirstOrDefaultAsync(x => x.ProductId == id);
-    if(product == null ) return null;
+    if (product == null) return null;
 
     return _mapper.Map<ProductDTO>(product);
   }

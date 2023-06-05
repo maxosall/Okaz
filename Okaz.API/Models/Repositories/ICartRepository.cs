@@ -1,6 +1,6 @@
 using Okaz.Models;
 
-namespace Okaz.Okaz.API.Models.Repositories;
+namespace Okaz.API.Models.Repositories;
 
 public interface ICartRepository
 {

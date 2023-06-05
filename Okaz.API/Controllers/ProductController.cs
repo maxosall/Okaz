@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Okaz.API.Models.Repositories;
 using Okaz.Models;
-using Okaz.Okaz.API.Models.DTOs;
+using Okaz.API.Models.DTOs;
 
 namespace Okaz.API.Controllers
 {

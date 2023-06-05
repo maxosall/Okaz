@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Okaz.Models;
-using Okaz.Okaz.API.Models.DTOs;
+using Okaz.API.Models.DTOs;
 
-namespace Okaz.Okaz.API.Models.Repositories;
+namespace Okaz.API.Models.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {

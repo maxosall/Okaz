@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Okaz.API.Extensions;
+using Okaz.API.Models;
 using Okaz.API.Models.Repositories;
-using Okaz.Okaz.API.Extensions;
-using Okaz.Okaz.API.Models;
-using Okaz.Okaz.API.Models.Repositories;
+using Okaz.API.Models.Repositories;
+using Okaz.API.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

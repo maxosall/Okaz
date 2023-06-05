@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Okaz.Models;
-namespace Okaz.Okaz.API.Models.DTOs;
+namespace Okaz.API.Models.DTOs;
 
 public class ProductCreateDTO
 {

@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Okaz.API.Models.DTOs;
-using Okaz.Okaz.API.Models.DTOs;
+using Okaz.API.Models.DTOs;
 
-namespace Okaz.Okaz.API.Extensions;
+namespace Okaz.API.Extensions;
 
 public static class WebHostBuilderExtension
 {

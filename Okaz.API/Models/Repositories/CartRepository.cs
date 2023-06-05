@@ -1,19 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+using Okaz.API.Models;
 using Okaz.Models;
 
-namespace Okaz.Okaz.API.Models.Repositories;
-
-public class CartRepository : ICartRepository
+namespace Okaz.API.Models.Repositories
 {
-  private readonly OkazDbContext _context;
-
-  public CartRepository(OkazDbContext context)
+  public class CartRepository : ICartRepository
   {
-    _context = context;
-  }
+    private readonly OkazDbContext _context;
 
-  public async Task<IEnumerable<Cart>> GetAll()
-  {
-    return await _context.Carts.ToListAsync();
+    public CartRepository(OkazDbContext context)
+    {
+      _context = context;
+    }
+
+    public async Task<IEnumerable<Cart>> GetAll()
+    {
+      return await _context.Carts.ToListAsync();
+    }
   }
 }

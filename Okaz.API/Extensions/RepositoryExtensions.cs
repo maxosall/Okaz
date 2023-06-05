@@ -1,5 +1,5 @@
 using Okaz.API.Models.Repositories;
-using Okaz.Okaz.API.Models.Repositories;
+using Okaz.API.Models.Repositories;
 
 namespace Okaz.API.Extensions
 {

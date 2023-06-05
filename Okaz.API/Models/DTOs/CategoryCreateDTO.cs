@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Okaz.Okaz.API.Models.DTOs;
+namespace Okaz.API.Models.DTOs;
 public class CategoryCreateDTO
 {
     public int CategoryId { get; set; }

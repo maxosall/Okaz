@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Okaz.Models;
-using Okaz.Okaz.API.Models.DTOs;
-using Okaz.Okaz.API.Models.Repositories;
-namespace Okaz.Okaz.API.Controllers;
+using Okaz.API.Models.DTOs;
+using Okaz.API.Models.Repositories;
+
+namespace Okaz.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
