@@ -1,0 +1,24 @@
+@page "/prodcuts-details/{id}"
+@inherits ProductDetailsBase
+ 
+@if(Product == null)
+{
+	<h3> No Product Found</h3>
+}
+else
+{
+	<div class="flex gap-4">
+		<img class="max-w-md" src="@Product.ImageUrl" />
+		<div class="">
+			<h3 class="font-extrabold text-2xl">@Product.Name</h3>
+			<p calss="font-extrabold text-2xl "> @Product.Price $ </p>
+			@if ( Product.CategoryName == null ){
+				<p>Catergory: N/A</p> 
+			}else{
+			<span>Catergory: @Product.CategoryName</span>
+			}
+			<h3 class="font-extrabold text-blue-800">Description:</h3>
+			<p>@Product.Description</p>
+		</div>	
+	</div>
+}

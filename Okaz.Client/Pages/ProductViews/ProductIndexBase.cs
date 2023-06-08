@@ -8,7 +8,7 @@ using Okaz.Client.Services;
 
 namespace Okaz.Client.Pages.ProductViews;
 
-public class IndexBase : ComponentBase
+public class ProductIndexBase : ComponentBase
 {
   [Inject]
   public IProductService ProductService { get; set; }
