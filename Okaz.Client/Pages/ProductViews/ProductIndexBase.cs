@@ -13,9 +13,10 @@ public class ProductIndexBase : ComponentBase
   [Inject]
   public IProductService ProductService { get; set; }
   public List<ProductDTO> Products { get; set; }
-
+  public int ProductCount { get; set; } 
   protected override async Task OnInitializedAsync()
   {
     Products = (await ProductService.GetProducts()).ToList();
+    ProductCount = Products.Count();
   }
 }
