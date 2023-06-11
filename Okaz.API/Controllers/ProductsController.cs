@@ -55,19 +55,22 @@ namespace Okaz.API.Controllers
       }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, ProductCreateDTO request)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateProduct(ProductCreateDTO product)
     {
-      if (id != request.ProductId)
+      try
       {
-        return BadRequest();
+        var productToUpdate = await _repository.GetByIdAsync(product.ProductId);
+        if (productToUpdate == null)
+        {
+          return NotFound($"No product with {product.ProductId} was found");
+        }
+        var updatedProduct = await _repository.Update(product);
+        return Ok(updatedProduct);
       }
-      var product = await _repository.Update(request);
-      if (product == null)
-      {
-        return NotFound();
+      catch(Exception ex){
+        throw;
       }
-      return NoContent();
     }
 
     [HttpDelete("{id}")]

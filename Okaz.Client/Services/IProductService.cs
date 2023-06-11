@@ -13,7 +13,7 @@ public interface IProductService
   Task<IEnumerable<ProductDTO>> GetProducts();
   Task<ProductDTO> GetProductById(int id);
   // Task<ProductCreateDTO> CreateProduct(ProductCreateDTO reqeust);
-  // Task<ProductCreateDTO> UpdateProduct(ProductCreateDTO updatedProduct);
+  Task<Product> UpdateProduct(ProductCreateDTO updatedProduct);
   Task<Product> DeleteProduct(int id);
 
 }

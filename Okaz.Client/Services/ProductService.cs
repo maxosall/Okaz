@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
+
 
 namespace Okaz.Client.Services;
 
@@ -62,10 +64,25 @@ public class ProductService : IProductService
 
 
 
-  // public async Task<ProductCreateDTO> UpdateProduct(ProductCreateDTO updatedProduct)
-  // {
-  //   return await _httpClient.PutAsJsonAsync<Product> ($"api/products", updatedProduct);
-  // }
+  public async Task<Product> UpdateProduct(ProductCreateDTO updatedProduct)
+  {
+    try
+    {
+      HttpResponseMessage response = await _httpClient.PutAsJsonAsync<ProductCreateDTO> ("api/products", updatedProduct);
+
+      if (!response.IsSuccessStatusCode) 
+      {     
+        throw GetExceptionForStatusCode(response.StatusCode, updatedProduct.ProductId);
+      }
+      return await response.Content.ReadFromJsonAsync<Product>();  
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex.Message);
+      return null;
+    }
+  }
+
   // public async Task<ProductCreateDTO> ProductCreateDTO(ProductCreateDTO request)
   // {
   //   return _httpClient.PutAsAsync<ProductCreateDTO> ($"api/products/{id}");
@@ -73,5 +90,15 @@ public class ProductService : IProductService
   public async Task<Product> DeleteProduct(int id)
   {
     return await _httpClient.GetFromJsonAsync<Product>($"api/products/{id}");
+  }
+
+  private Exception GetExceptionForStatusCode(HttpStatusCode statusCode, int productId)
+  {
+    return statusCode switch
+    {
+      HttpStatusCode.NotFound => new Exception($"No product with {productId} was found"),
+      HttpStatusCode.BadRequest => new Exception("The request was invalid or malformed"),
+      _ => new Exception("An error occurred while updating the product")
+    };
   }
 }
