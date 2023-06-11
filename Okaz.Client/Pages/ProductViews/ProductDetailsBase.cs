@@ -16,9 +16,15 @@ public class ProductDetailsBase: ComponentBase
 
   public ProductDTO Product { get; set; } = new ProductDTO();
 
+  public string ErrorMessage { get;set;}
 
   protected async override Task OnInitializedAsync()
   {
-    Product = await ProductService.GetProductById(int.Parse(Id));
+    try{
+      Product = await ProductService.GetProductById(int.Parse(Id));  
+    }
+    catch(Exception ex) {
+      ErrorMessage = ex.Message;
+    }
   }
 }
