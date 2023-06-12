@@ -9,7 +9,7 @@ public interface ICategoryRepository
 {
   Task<IEnumerable<Category>> GetAll();
 
-  Task<Category> GetByIdAsync(int id);
+  Task<CategoryDetailsDTO> GetByIdAsync(int id);
 
   Task AddAsync(CategoryCreateDTO entity);
 

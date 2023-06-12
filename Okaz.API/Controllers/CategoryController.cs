@@ -26,9 +26,9 @@ public class CategoryController : ControllerBase
   }
 
   [HttpGet("{id:int}")]
-  [ProducesResponseType(typeof(Category), 200)]
+  [ProducesResponseType(typeof(CategoryDetailsDTO), 200)]
   [ProducesResponseType(404)]
-  public async Task<ActionResult<Category>> GetCategoryById(int id)
+  public async Task<ActionResult<CategoryDetailsDTO>> GetCategoryById(int id)
   {
     try
     {

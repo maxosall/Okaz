@@ -21,21 +21,21 @@ public class CategoryRepository : ICategoryRepository
     .ToListAsync();
   }
 
-  public async Task<Category> GetByIdAsync(int id)
-  {
-    return await _context.Categories
-      .Include(c => c.Products)
-      .FirstOrDefaultAsync(x => x.CategoryId == id);
-  }
-  // public async Task<CategoryDetailsDTO> GetByIdAsync(int id)
+  // public async Task<Category> GetByIdAsync(int id)
   // {
-  //   var category = await _context.Categories
+  //   return await _context.Categories
   //     .Include(c => c.Products)
-  //     .FirstOrDefaultAsync(c => c.CategoryId == id);
-
-  //   var categoryDetailsDTO = _mapper.Map<CategoryDetailsDTO>(category);
-  //   return categoryDetailsDTO;
+  //     .FirstOrDefaultAsync(x => x.CategoryId == id);
   // }
+  public async Task<CategoryDetailsDTO> GetByIdAsync(int id)
+  {
+    var category = await _context.Categories
+      .Include(c => c.Products)
+      .FirstOrDefaultAsync(c => c.CategoryId == id);
+
+    var categoryDetailsDTO = _mapper.Map<CategoryDetailsDTO>(category);
+    return categoryDetailsDTO;
+  }
   public async Task AddAsync(CategoryCreateDTO dto)
   {
     var category = _mapper.Map<Category>(dto);
