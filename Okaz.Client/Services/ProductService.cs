@@ -68,7 +68,8 @@ public class ProductService : IProductService
   {
     try
     {
-      HttpResponseMessage response = await _httpClient.PutAsJsonAsync<ProductCreateDTO> ("api/products", updatedProduct);
+      HttpResponseMessage response = await _httpClient
+        .PutAsJsonAsync<ProductCreateDTO> ("api/products", updatedProduct);
 
       if (!response.IsSuccessStatusCode) 
       {     
