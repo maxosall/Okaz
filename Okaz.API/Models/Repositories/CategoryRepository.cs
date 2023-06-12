@@ -27,7 +27,15 @@ public class CategoryRepository : ICategoryRepository
       .Include(c => c.Products)
       .FirstOrDefaultAsync(x => x.CategoryId == id);
   }
+  // public async Task<CategoryDetailsDTO> GetByIdAsync(int id)
+  // {
+  //   var category = await _context.Categories
+  //     .Include(c => c.Products)
+  //     .FirstOrDefaultAsync(c => c.CategoryId == id);
 
+  //   var categoryDetailsDTO = _mapper.Map<CategoryDetailsDTO>(category);
+  //   return categoryDetailsDTO;
+  // }
   public async Task AddAsync(CategoryCreateDTO dto)
   {
     var category = _mapper.Map<Category>(dto);

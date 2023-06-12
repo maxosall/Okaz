@@ -30,12 +30,18 @@ public class CategoryController : ControllerBase
   [ProducesResponseType(404)]
   public async Task<ActionResult<Category>> GetCategoryById(int id)
   {
-    var category = await _repository.GetByIdAsync(id);
-    if (category == null)
+    try
     {
-      return NotFound();
+      var category = await _repository.GetByIdAsync(id);
+      if (category == null)
+      {
+        return NotFound($"Category with id {id} not found.");
+      }
+      return Ok(category);
     }
-    return Ok(category);
+    catch(Exception ex){
+      return StatusCode(500, $"Something went wrong: {ex.Message} ");
+    }
   }
 
   [HttpPost]

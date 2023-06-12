@@ -13,7 +13,7 @@ builder.Services.AddDbContext<OkazDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("OkazDB")));
 
 
-builder.AddAutoMapperProfiles();
+builder.Services.AddAutoMapperProfiles();
 builder.Services.AddRepositories();
 
 builder.Services.AddControllers().AddJsonOptions(x =>

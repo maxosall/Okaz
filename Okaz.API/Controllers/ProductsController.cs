@@ -55,7 +55,7 @@ namespace Okaz.API.Controllers
       }
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut()]
     public async Task<IActionResult> UpdateProduct(ProductCreateDTO product)
     {
       try

@@ -7,11 +7,16 @@ namespace Okaz.API.Extensions;
 
 public static class WebHostBuilderExtension
 {
-  public static WebApplicationBuilder AddAutoMapperProfiles(this WebApplicationBuilder builder)
+  public static IServiceCollection AddAutoMapperProfiles(this IServiceCollection services)
   {
-    builder.Services.AddAutoMapper(profileAssemblyMarkerTypes: typeof(CategoryProfile));
-    builder.Services.AddAutoMapper(profileAssemblyMarkerTypes: typeof(ProductProfile));
-    return builder;
+    // Register AutoMapper once and pass all the profile types as an array
+    services.AddAutoMapper(
+      profileAssemblyMarkerTypes: new[] 
+      { 
+        typeof(CategoryProfile), 
+        typeof(ProductProfile) 
+      });
+    return services;
   }
 }
 
