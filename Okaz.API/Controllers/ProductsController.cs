@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Okaz.API.Models.DTOs;
 using Okaz.API.Models.Repositories;
 using Okaz.Models;
-using Okaz.API.Models.DTOs;
 
 namespace Okaz.API.Controllers
 {
@@ -30,16 +30,16 @@ namespace Okaz.API.Controllers
     public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
       var product = await _repository.GetByIdAsync(id);
-      
+
       if (product == null) return NotFound();
-      
+
       return Ok(product);
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(Product), 201)]
+    [ProducesResponseType(typeof(ProductDTO), 201)]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<Product>> CreateProduct(ProductCreateDTO request)
+    public async Task<ActionResult<ProductDTO>> CreateProduct(ProductCreateDTO request)
     {
       if (!ModelState.IsValid) return BadRequest(ModelState);
       try
@@ -68,7 +68,8 @@ namespace Okaz.API.Controllers
         var updatedProduct = await _repository.Update(product);
         return Ok(updatedProduct);
       }
-      catch(Exception ex){
+      catch (Exception ex)
+      {
         throw;
       }
     }

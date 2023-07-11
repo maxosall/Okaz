@@ -1,8 +1,8 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Okaz.Models;
 using Okaz.API.Models;
 using Okaz.API.Models.DTOs;
+using Okaz.Models;
 // using System.Threading.Task;
 
 namespace Okaz.API.Models.Repositories;
@@ -19,7 +19,7 @@ public class ProductRepository : IProductRepository
   }
 
 
-  public async Task<Product> AddAsync(ProductCreateDTO request)
+  public async Task<ProductDTO> AddAsync(ProductCreateDTO request)
   {
     if (request == null)
       throw new ArgumentNullException(nameof(request));
@@ -29,7 +29,7 @@ public class ProductRepository : IProductRepository
     var result = await _context.Products.AddAsync(product);
     await _context.SaveChangesAsync();
 
-    return result.Entity;
+    return _mapper.Map<ProductDTO>(result.Entity);
   }
 
   public async Task DeleteByIdAsync(int id)
@@ -66,7 +66,7 @@ public class ProductRepository : IProductRepository
     return _mapper.Map<ProductDTO>(product);
   }
 
-  public async Task<Product> Update(ProductCreateDTO dto)
+  public async Task<ProductDTO> Update(ProductCreateDTO dto)
   {
     if (dto == null) throw new ArgumentNullException(nameof(dto));
 
@@ -76,6 +76,19 @@ public class ProductRepository : IProductRepository
     _mapper.Map(dto, product);
 
     await _context.SaveChangesAsync();
-    return product;
+    return _mapper.Map<ProductDTO>(product);
   }
+
+  // public async Task<Product> Update(ProductCreateDTO dto)
+  // {
+  //   if (dto == null) throw new ArgumentNullException(nameof(dto));
+
+  //   var product = await _context.Products.FindAsync(dto.ProductId);
+  //   if (product == null) return null;
+
+  //   _mapper.Map(dto, product);
+
+  //   await _context.SaveChangesAsync();
+  //   return product;
+  // }
 }
