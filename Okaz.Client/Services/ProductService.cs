@@ -1,13 +1,13 @@
-using Okaz.API.Models.DTOs;
-using Okaz.Models;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Okaz.API.Models.DTOs;
+using Okaz.Models;
 
 namespace Okaz.Client.Services;
 
@@ -17,7 +17,7 @@ public class ProductService : IProductService
 
   public ProductService(HttpClient httpClient)
   {
-      _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
   }
 
   public async Task<IEnumerable<ProductDTO>> GetProducts()
@@ -39,7 +39,7 @@ public class ProductService : IProductService
     {
       var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
       // Use ConfigureAwait(false) to avoid blocking the UI thread
-      return await _httpClient.GetFromJsonAsync<ProductDTO>($"api/products/{id}", 
+      return await _httpClient.GetFromJsonAsync<ProductDTO>($"api/products/{id}",
         cancellationTokenSource.Token)
           .ConfigureAwait(false);
     }
@@ -69,19 +69,14 @@ public class ProductService : IProductService
   {
     try
     {
-<<<<<<< HEAD
+
       HttpResponseMessage response = await _httpClient
-        .PutAsJsonAsync<ProductCreateDTO> ("api/products", updatedProduct);
-=======
-
-      HttpResponseMessage response = await _httpClient.PutAsJsonAsync<ProductCreateDTO> ("api/products", updatedProduct);
->>>>>>> maxo/edit_product_form
-
-      if (!response.IsSuccessStatusCode) 
-      {     
+        .PutAsJsonAsync<ProductCreateDTO>("api/products", updatedProduct);
+      if (!response.IsSuccessStatusCode)
+      {
         throw GetExceptionForStatusCode(response.StatusCode, updatedProduct.ProductId);
       }
-      return await response.Content.ReadFromJsonAsync<ProductDTO>();  
+      return await response.Content.ReadFromJsonAsync<ProductDTO>();
     }
     catch (Exception ex)
     {
@@ -90,25 +85,25 @@ public class ProductService : IProductService
     }
   }
 
- 
-//   public async Task<ProductDTO> CreateProduct(ProductCreateDTO product) 
-//   {
-//    try {
-//     var response = await _httpClient
-//       .PostAsJsonAsync<ProductCreateDTO>("api/products", product);
 
-//     if (response.IsSuccessStatusCode) 
-//     { 
-//       var responseBody = await response.Content.ReadAsStreamAsync(); 
-//       return await JsonSerializer.DeserializeAsync<ProductDTO>(responseBody, 
-//         new JsonSerializerOptions { 
-//           PropertyNameCaseInsensitive = true 
-//           }); 
-//       } 
-//         return null; 
-//       } 
-//       catch(Exception ex) { throw; }
-// }
+  //   public async Task<ProductDTO> CreateProduct(ProductCreateDTO product) 
+  //   {
+  //    try {
+  //     var response = await _httpClient
+  //       .PostAsJsonAsync<ProductCreateDTO>("api/products", product);
+
+  //     if (response.IsSuccessStatusCode) 
+  //     { 
+  //       var responseBody = await response.Content.ReadAsStreamAsync(); 
+  //       return await JsonSerializer.DeserializeAsync<ProductDTO>(responseBody, 
+  //         new JsonSerializerOptions { 
+  //           PropertyNameCaseInsensitive = true 
+  //           }); 
+  //       } 
+  //         return null; 
+  //       } 
+  //       catch(Exception ex) { throw; }
+  // }
   public async Task<Product> DeleteProduct(int id)
   {
     return await _httpClient.GetFromJsonAsync<Product>($"api/products/{id}");

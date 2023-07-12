@@ -14,14 +14,14 @@ public class ProductEditBase : ComponentBase
   public ICategoryService CategoryService { get; set; }
   [Inject]
   public NavigationManager NavigationManager { get; set; }
-  public ProductDTO Product { get; set; } = new ();
+  public ProductDTO Product { get; set; } = new();
 
   public List<CategoryDTO> CategoryList { get; set; } = new();
 
   public string? ErrorMessage { get; set; }
   public string CategoryId { get; set; }
-  public string PageHeating {get; set;}
-  public string SubmitButtonText {get; set;}
+  public string PageHeating { get; set; }
+  public string SubmitButtonText { get; set; } = "Save Changes";
   protected async Task HandleSubmit()
   {
     var productUpdateDto = new ProductCreateDTO
@@ -49,17 +49,17 @@ public class ProductEditBase : ComponentBase
       CategoryList = (await CategoryService.GetCategories()).ToList();
       CategoryId = Product.CategoryId.ToString();
 
-      if(NavigationManager.Uri == "/product-edit/{id}")
+      if (NavigationManager.Uri == "/product-edit/{id}")
       {
-        PageHeating = "Edit Product";     
+        PageHeating = "Edit Product";
         SubmitButtonText = "Save Changes";
       }
-      else if(NavigationManager.Uri == "/product-create")
+      else if (NavigationManager.Uri == "/product-create")
       {
-        PageHeating ="Create a New Product";
+        PageHeating = "Create a New Product";
         SubmitButtonText = "Submit";
       }
-			ErrorMessage = null;
+      ErrorMessage = null;
     }
     catch (Exception ex)
     {
