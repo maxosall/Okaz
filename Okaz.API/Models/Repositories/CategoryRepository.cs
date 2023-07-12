@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Okaz.Models;
 using Okaz.API.Models.DTOs;
+using Okaz.Models;
 
 namespace Okaz.API.Models.Repositories;
 
@@ -15,10 +15,12 @@ public class CategoryRepository : ICategoryRepository
     _context = context;
   }
 
-  public async Task<IEnumerable<Category>> GetAll()
+  public async Task<IEnumerable<CategoryDTO>> GetAll()
   {
-    return await _context.Categories.Include(c => c.Products)
+    var categories = await _context.Categories
     .ToListAsync();
+    var results = _mapper.Map<IEnumerable<CategoryDTO>>(categories);
+    return results;
   }
 
   // public async Task<Category> GetByIdAsync(int id)
@@ -44,7 +46,7 @@ public class CategoryRepository : ICategoryRepository
     _context.SaveChangesAsync();
   }
 
-  
+
   public async Task Update(CategoryCreateDTO dto)
   {
     if (dto == null) throw new ArgumentNullException(nameof(dto));

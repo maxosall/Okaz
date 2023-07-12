@@ -7,7 +7,7 @@ namespace Okaz.API.Models.Repositories;
 
 public interface ICategoryRepository
 {
-  Task<IEnumerable<Category>> GetAll();
+  Task<IEnumerable<CategoryDTO>> GetAll();
 
   Task<CategoryDetailsDTO> GetByIdAsync(int id);
 

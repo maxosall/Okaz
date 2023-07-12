@@ -17,14 +17,14 @@ public class ProductService : IProductService
 
   public ProductService(HttpClient httpClient)
   {
-    _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    _httpClient = httpClient ??
+      throw new ArgumentNullException(nameof(httpClient));
   }
 
   public async Task<IEnumerable<ProductDTO>> GetProducts()
   {
     try
     {
-
       return await _httpClient.GetFromJsonAsync<ProductDTO[]>("api/products");
     }
     catch (Exception ex)
@@ -86,24 +86,26 @@ public class ProductService : IProductService
   }
 
 
-  //   public async Task<ProductDTO> CreateProduct(ProductCreateDTO product) 
-  //   {
-  //    try {
-  //     var response = await _httpClient
-  //       .PostAsJsonAsync<ProductCreateDTO>("api/products", product);
+  public async Task<ProductDTO> CreateProduct(ProductCreateDTO product)
+  {
+    try
+    {
+      var response = await _httpClient
+        .PostAsJsonAsync<ProductCreateDTO>("api/products", product);
 
-  //     if (response.IsSuccessStatusCode) 
-  //     { 
-  //       var responseBody = await response.Content.ReadAsStreamAsync(); 
-  //       return await JsonSerializer.DeserializeAsync<ProductDTO>(responseBody, 
-  //         new JsonSerializerOptions { 
-  //           PropertyNameCaseInsensitive = true 
-  //           }); 
-  //       } 
-  //         return null; 
-  //       } 
-  //       catch(Exception ex) { throw; }
-  // }
+      if (response.IsSuccessStatusCode)
+      {
+        var responseBody = await response.Content.ReadAsStreamAsync();
+        return await JsonSerializer.DeserializeAsync<ProductDTO>(responseBody,
+          new JsonSerializerOptions
+          {
+            PropertyNameCaseInsensitive = true
+          });
+      }
+      return null;
+    }
+    catch (Exception ex) { throw; }
+  }
   public async Task<Product> DeleteProduct(int id)
   {
     return await _httpClient.GetFromJsonAsync<Product>($"api/products/{id}");

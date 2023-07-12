@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Okaz.Models;
 using Okaz.API.Models.DTOs;
 using Okaz.API.Models.Repositories;
+using Okaz.Models;
 
 namespace Okaz.API.Controllers;
 
@@ -18,8 +18,8 @@ public class CategoryController : ControllerBase
   }
 
   [HttpGet]
-  [ProducesResponseType(typeof(IEnumerable<Category>), 200)]
-  public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+  [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), 200)]
+  public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
   {
     var categories = await _repository.GetAll();
     return Ok(categories);
@@ -39,7 +39,8 @@ public class CategoryController : ControllerBase
       }
       return Ok(category);
     }
-    catch(Exception ex){
+    catch (Exception ex)
+    {
       return StatusCode(500, $"Something went wrong: {ex.Message} ");
     }
   }
