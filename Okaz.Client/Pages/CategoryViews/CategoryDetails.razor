@@ -1,0 +1,30 @@
+@page "/category-details/{Id}"
+
+@if(string.IsNullOrEmpty(ErrorMessage) == false)
+{
+  <h1>@ErrorMessage</h1>
+}
+else if(Category is null)
+{
+  <Spinner />
+}
+else{
+  <div class="mx-2 md:mx-0">
+    <h3 class="font-semibold py-2">Prodcuts under <b class="font-extrabold">@Category.Name</b> category: (@ProductCount)</h3>
+    <div class="grid gap-3 grid-cols-12 md:grid-cols-9">
+      @if (Category.Products is not null && ProductCount > 0)
+      {
+        @foreach(var product in Category.Products)
+        {
+          <div class="items-center col-span-12 md:col-span-3 flex border-1 border-grey-200 rounded-sm shadow-sm">
+            <img class="h-[8rem] w-[8rem]" src="@product.ImageUrl" />            
+            <div class="p-2">
+              <h3 class="md:text-lg font-semibold"> @product.Name</h3>        
+              <p> @product.Price</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
