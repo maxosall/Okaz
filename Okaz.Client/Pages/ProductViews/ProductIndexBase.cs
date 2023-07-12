@@ -13,10 +13,20 @@ public class ProductIndexBase : ComponentBase
   [Inject]
   public IProductService ProductService { get; set; }
   public List<ProductDTO> Products { get; set; }
-  public int ProductCount { get; set; } 
+  public int ProductCount { get; set; } = 0;
+  public string? ErrorMessage { get; set; }
   protected override async Task OnInitializedAsync()
   {
-    Products = (await ProductService.GetProducts()).ToList();
-    ProductCount = Products.Count();
+    try
+    {
+      Products = (await ProductService.GetProducts()).ToList();
+      ProductCount = Products.Count;
+      ErrorMessage = null;
+    }
+    catch (Exception ex)
+    {
+      ErrorMessage = ex.Message;
+    }
+
   }
 }

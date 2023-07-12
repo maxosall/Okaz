@@ -1,29 +1,32 @@
 using Microsoft.AspNetCore.Components;
-using Okaz.Models;
-using Okaz.Client.Services;
-using Okaz.API.Models.Repositories;
 using Okaz.API.Models.DTOs;
+using Okaz.API.Models.Repositories;
+using Okaz.Client.Services;
+using Okaz.Models;
 
 namespace Okaz.Client.Pages.ProductViews;
 
-public class ProductDetailsBase: ComponentBase
+public class ProductDetailsBase : ComponentBase
 {
   [Inject]
-  public IProductService ProductService { get; set; }  
+  public IProductService ProductService { get; set; }
 
   [Parameter]
-  public string Id {get; set; }
+  public string Id { get; set; }
 
   public ProductDTO Product { get; set; } = new ProductDTO();
 
-  public string ErrorMessage { get;set;}
+  public string? ErrorMessage { get; set; }
 
-  protected async override Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
   {
-    try{
-      Product = await ProductService.GetProductById(int.Parse(Id));  
+    try
+    {
+      Product = await ProductService.GetProductById(int.Parse(Id));
+      ErrorMessage = null;
     }
-    catch(Exception ex) {
+    catch (Exception ex)
+    {
       ErrorMessage = ex.Message;
     }
   }

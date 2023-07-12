@@ -1,2 +1,107 @@
 @page "/product-edit/{id}"
+@page "/product-create"
 @inherits ProductEditBase
+
+	<PageTitle>@PageHeating</PageTitle>
+
+
+<div class="grid grid-cols-1 md:grid-cols-12 gap-2 pb-2 my-auto border-b border-gray-200 px-6  md:px-0">
+	  <h1 class="col-span-1 md:col-span-4 text-lg font-bold text-left  border-0 outline-0">Edit product </h1>
+
+	  <div class="col-span-1 md:col-span-8 flex gap-2">
+		<NavLink href="/"class="font-medium py-2 px-2  text-gray-700 hover:text-blue-700 underline text-sm">Back</NavLink> 
+
+		
+
+		<NavLink href=""class="font-medium py-2 px-2  text-gray-700 hover:text-red-700 underline text-sm">Delete</NavLink>
+	</div>
+</div>
+<section class="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-6 md:px-0 ">
+@if(string.IsNullOrWhiteSpace(ErrorMessage) == false)
+{
+	<h1 class="text-red-800 font-extrabold">@ErrorMessage</h1>
+}
+else if(Product is null)
+{
+	<Spinner/>
+}
+else{
+	<figure class="col-span-1 md:col-span-4">
+		<img src="@Product.ImageUrl" class="rounded-lg"/>
+	</figure>
+	<EditForm Model="@Product" OnValidSubmit="HandleSubmit" class=" col-span-1 md:col-span-8  gap-4">
+		<DataAnnotationsValidator/>
+
+	<!-- Name -->
+
+		<div class="mb-6">
+			<label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-semibold">Product Name</label>
+
+			<InputText @bind-Value="@Product.Name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+			<ValidationMessage For="@(() => Product.Name)"/>
+		</div>
+
+
+	<!-- Description -->
+
+		<div class="mb-6">
+			<label for="description" class="font-semibold block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+
+			<InputTextArea @bind-Value="@Product.Description" id="description" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave a comment..."/>
+
+			<ValidationMessage For="@(() => Product.Description)"/>
+		</div>
+
+
+		<!-- image url -->
+
+		<div class="mb-6">
+			<label for="imageUrl" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-semibold">Image Url</label>
+
+			<InputText @bind-Value="@Product.ImageUrl" id="imageUrl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+
+			<ValidationMessage For="@(() => Product.ImageUrl)"/>
+		</div>
+
+
+		<!-- price -->
+		<div class="md:flex gap-6 ">
+		<div class="mb-6 flex-1">
+			<label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-semibold">Price</label>
+
+			<InputNumber @bind-Value="@Product.Price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+
+			<ValidationMessage For="@(() => Product.Price)" ErrorMessage="The price must be a valid number."/>
+
+		</div>
+
+
+		<!-- Category -->
+		<div class="mb-6 flex-1">
+		<label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-semibold">Category</label>
+
+			<div class="flex items-center space-x-2">
+	<InputSelect class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block flex-1  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" @bind-Value="@Product.CategoryId">
+		@if (CategoryList != null)
+		{
+			@foreach (var category in CategoryList)
+			{
+				<option value="@category.CategoryId">@category.Name</option>
+			}
+		}
+	</InputSelect>
+	<button type="button" class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+	Add New</button>
+</div>
+
+		</div>
+		</div>
+		<button type="Submit" class="text-white float-right bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center gap-2 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+		<span class=""> @SubmitButtonText </span>
+  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+  
+</button>
+	</EditForm>
+}
+</section>
