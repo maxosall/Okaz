@@ -24,7 +24,7 @@ public class ProductEditBase : ComponentBase
   public string SubmitButtonText { get; set; } = "Save Changes";
   protected async Task HandleSubmit()
   {
-    var productUpdateDto = new ProductCreateDTO
+    var productRequest = new ProductCreateDTO
     {
       ProductId = Product.ProductId,
       Name = Product.Name,
@@ -34,18 +34,23 @@ public class ProductEditBase : ComponentBase
       CategoryId = Product.CategoryId
       // CategoryId = int.Parse(CategoryId)
     };
-    var result = await ProductService.UpdateProduct(productUpdateDto);
 
-    if (result != null)
-    {
-      NavigationManager.NavigateTo("/");
-    }
+    ProductDTO result = Product.ProductId != 0
+      ? await ProductService.UpdateProduct(productRequest)
+      : await ProductService.CreateProduct(productRequest);
+
+    if (result != null) NavigationManager.NavigateTo("/");
+
   }
   protected override async Task OnInitializedAsync()
   {
     try
     {
-      Product = await ProductService.GetProductById(int.Parse(Id));
+      int.TryParse(Id, out int productId);
+      if (productId != 0)
+      {
+        Product = await ProductService.GetProductById(int.Parse(Id));
+      }
       CategoryList = (await CategoryService.GetCategories()).ToList();
       CategoryId = Product.CategoryId.ToString();
 
