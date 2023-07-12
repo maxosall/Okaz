@@ -1,5 +1,5 @@
-using Okaz.Models;
 using Okaz.API.Models.DTOs;
+using Okaz.Models;
 
 namespace Okaz.API.Models.Repositories
 {
@@ -9,9 +9,9 @@ namespace Okaz.API.Models.Repositories
 
     Task<ProductDTO> GetByIdAsync(int id);
 
-    Task<Product> AddAsync(ProductCreateDTO entity);
+    Task<ProductDTO> AddAsync(ProductCreateDTO entity);
 
-    Task<Product> Update(ProductCreateDTO entity);
+    Task<ProductDTO> Update(ProductCreateDTO entity);
 
     Task DeleteByIdAsync(int id);
   }
