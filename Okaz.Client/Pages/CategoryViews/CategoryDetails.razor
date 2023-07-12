@@ -11,7 +11,7 @@ else if(Category is null)
 else{
   <div class="mx-2 md:mx-0">
     <h3 class="font-semibold py-2">Prodcuts under <b class="font-extrabold">@Category.Name</b> category: (@ProductCount)</h3>
-    <div class="grid gap-3 grid-cols-12 md:grid-cols-9">
+    <div class="grid gap-3 grid-cols-12 md:grid-cols-9" >
       @if (Category.Products is not null && ProductCount > 0)
       {
         @foreach(var product in Category.Products)
