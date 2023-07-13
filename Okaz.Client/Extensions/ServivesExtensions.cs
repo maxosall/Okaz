@@ -9,7 +9,7 @@ public static class ServivesExtensions
   {
     services.AddScoped(client => 
       new HttpClient {
-        BaseAddress = new Uri("https://localhost:7169/")
+        BaseAddress = new Uri("https://localhost:7117/")
     });
 
     services.AddScoped<IProductService, ProductService>();

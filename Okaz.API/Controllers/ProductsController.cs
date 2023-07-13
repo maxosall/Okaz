@@ -51,11 +51,11 @@ namespace Okaz.API.Controllers
       catch (Exception ex)
       {
         // _logger.LogError(ex, "An error occurred while creating a category");
-        return StatusCode(500, "An error occurred while creating a category");
+        return StatusCode(500, $"An error occurred while creating a Product: {ex.Message} ");
       }
     }
 
-    [HttpPut()]
+    [HttpPut]
     public async Task<IActionResult> UpdateProduct(ProductCreateDTO product)
     {
       try

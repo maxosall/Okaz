@@ -35,9 +35,15 @@ public class ProductEditBase : ComponentBase
       // CategoryId = int.Parse(CategoryId)
     };
 
-    ProductDTO result = Product.ProductId != 0
-      ? await ProductService.UpdateProduct(productRequest)
-      : await ProductService.CreateProduct(productRequest);
+    ProductDTO result= null;
+    if(Product.ProductId != 0)
+    {
+      result =await ProductService.UpdateProduct(productRequest);
+    }
+    else
+    { 
+      result= await ProductService.CreateProduct(productRequest);
+    }
 
     if (result != null) NavigationManager.NavigateTo("/");
 
@@ -51,19 +57,10 @@ public class ProductEditBase : ComponentBase
       {
         Product = await ProductService.GetProductById(int.Parse(Id));
       }
+      
       CategoryList = (await CategoryService.GetCategories()).ToList();
-      CategoryId = Product.CategoryId.ToString();
+      
 
-      if (NavigationManager.Uri == "/product-edit/{id}")
-      {
-        PageHeating = "Edit Product";
-        SubmitButtonText = "Save Changes";
-      }
-      else if (NavigationManager.Uri == "/product-create")
-      {
-        PageHeating = "Create a New Product";
-        SubmitButtonText = "Submit";
-      }
       ErrorMessage = null;
     }
     catch (Exception ex)

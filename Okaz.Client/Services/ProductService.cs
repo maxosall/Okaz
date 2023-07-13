@@ -106,6 +106,7 @@ public class ProductService : IProductService
     }
     catch (Exception ex) { throw; }
   }
+  
   public async Task<Product> DeleteProduct(int id)
   {
     return await _httpClient.GetFromJsonAsync<Product>($"api/products/{id}");
