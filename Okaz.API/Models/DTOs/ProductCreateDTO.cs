@@ -6,7 +6,7 @@ public class ProductCreateDTO
 {
   public int ProductId { get; set;}
   [Required]
-  [StringLength(500, ErrorMessage = "The description cannot exceed 500 characters.")]
+  [StringLength(150, ErrorMessage = "The description cannot exceed 500 characters.")]
   public string Name { get; set; }
   [Required]
   [StringLength(500, ErrorMessage = "The description cannot exceed 500 characters.")]
