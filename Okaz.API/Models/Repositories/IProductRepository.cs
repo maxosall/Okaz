@@ -13,6 +13,6 @@ namespace Okaz.API.Models.Repositories
 
     Task<ProductDTO> Update(ProductCreateDTO entity);
 
-    Task DeleteByIdAsync(int id);
+    Task<ProductDTO> DeleteByIdAsync(int id);
   }
 }

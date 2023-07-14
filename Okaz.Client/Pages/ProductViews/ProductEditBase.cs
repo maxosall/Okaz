@@ -48,13 +48,14 @@ public class ProductEditBase : ComponentBase
   }
   protected async Task HandleDeleteProduct()
   {
-   // int.TryParse(Id, out int productId);
+    ProductDTO result = null;
+    if(Product.ProductId != 0)
+      result = await ProductService.DeleteProduct(Product.ProductId);
+    
+     if (result is not null) NavigationManager.NavigateTo("/");
 
-   //  if(productId >0)
-   //  {
-   //    var result = await ProductService.DeleteProduct(productId);
-   //  }
   }
+  
   protected override async Task OnInitializedAsync()
   {
     try
@@ -68,8 +69,7 @@ public class ProductEditBase : ComponentBase
         Product.CategoryId =1;
       }
       
-      CategoryList = (await CategoryService.GetCategories()).ToList();
-      
+      CategoryList = (await CategoryService.GetCategories()).ToList();      
 
       ErrorMessage = null;
     }

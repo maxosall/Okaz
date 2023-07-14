@@ -94,7 +94,7 @@ namespace Okaz.API.Controllers
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProduct(int id)
+    public async Task<ActionResult<ProductDTO>> DeleteProduct(int id)
     {
       var product = await _repository.GetByIdAsync(id);
       if (product == null)
@@ -102,7 +102,7 @@ namespace Okaz.API.Controllers
         return NotFound();
       }
       await _repository.DeleteByIdAsync(id);
-      return NoContent();
+      return product;
     }
   }
 }

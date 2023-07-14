@@ -106,11 +106,14 @@ public class ProductService : IProductService
     }
     catch (Exception ex) { throw; }
   }
-  
-  public async Task<Product> DeleteProduct(int id)
-  {
-    return await _httpClient.GetFromJsonAsync<Product>($"api/products/{id}");
-  }
+
+  public async Task<ProductDTO> DeleteProduct(int id)
+{
+    HttpResponseMessage response = await _httpClient.DeleteAsync($"api/products/{id}");
+    response.EnsureSuccessStatusCode();
+    var deletedProduct = await response.Content.ReadFromJsonAsync<ProductDTO>();
+    return deletedProduct;
+}
 
   private Exception GetExceptionForStatusCode(HttpStatusCode statusCode, int productId)
   {

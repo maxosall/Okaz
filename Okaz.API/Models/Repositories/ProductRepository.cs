@@ -32,7 +32,7 @@ public class ProductRepository : IProductRepository
     return _mapper.Map<ProductDTO>(result.Entity);
   }
 
-  public async Task DeleteByIdAsync(int id)
+  public async Task<ProductDTO> DeleteByIdAsync(int id)
   {
     var product = await _context.Products
       .FirstOrDefaultAsync(p => p.ProductId == id);
@@ -41,8 +41,9 @@ public class ProductRepository : IProductRepository
     {
       _context.Products.Remove(product);
       await _context.SaveChangesAsync();
+      return _mapper.Map<ProductDTO>(product);
     }
-    // return Task.CompletedTask;  
+    return null;  
   }
 
   public async Task<IEnumerable<ProductDTO>> GetAll()

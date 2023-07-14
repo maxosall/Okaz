@@ -14,6 +14,6 @@ public interface IProductService
   Task<ProductDTO> GetProductById(int id);
   Task<ProductDTO> CreateProduct(ProductCreateDTO reqeust);
   Task<ProductDTO> UpdateProduct(ProductCreateDTO updatedProduct);
-  Task<Product> DeleteProduct(int id);
+  Task<ProductDTO> DeleteProduct(int id);
 
 }
