@@ -20,8 +20,6 @@ public class ProductEditBase : ComponentBase
 
   public string? ErrorMessage { get; set; }
   public string CategoryId { get; set; }
-  public string PageHeating { get; set; }
-  public string SubmitButtonText { get; set; } = "Save Changes";
   protected async Task HandleSubmit()
   {
     var productRequest = new ProductCreateDTO
@@ -48,6 +46,15 @@ public class ProductEditBase : ComponentBase
     if (result != null) NavigationManager.NavigateTo("/");
 
   }
+  protected async Task HandleDeleteProduct()
+  {
+   // int.TryParse(Id, out int productId);
+
+   //  if(productId >0)
+   //  {
+   //    var result = await ProductService.DeleteProduct(productId);
+   //  }
+  }
   protected override async Task OnInitializedAsync()
   {
     try
@@ -56,6 +63,9 @@ public class ProductEditBase : ComponentBase
       if (productId != 0)
       {
         Product = await ProductService.GetProductById(int.Parse(Id));
+      }
+      else{
+        Product.CategoryId =1;
       }
       
       CategoryList = (await CategoryService.GetCategories()).ToList();

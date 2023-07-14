@@ -36,6 +36,25 @@ namespace Okaz.API.Controllers
       return Ok(product);
     }
 
+    // [HttpPost]
+    // [ProducesResponseType(typeof(ProductDTO), 201)]
+    // [ProducesResponseType(400)]
+    // public async Task<ActionResult<ProductDTO>> CreateProduct(ProductCreateDTO request)
+    // {
+    //   if (request is null) return BadRequest("No Product Provided");
+    //   try
+    //   {
+    //     var product = await _repository.AddAsync(request);
+    //     return CreatedAtAction(
+    //         nameof(GetProduct), new { id = product.ProductId }, product);
+    //   }
+    //   catch (Exception ex)
+    //   {
+    //     // _logger.LogError(ex, "An error occurred while creating a category");
+    //     return StatusCode(500, $"An error occurred while creating a Product: {ex.Message} ");
+    //   }
+    // }
+
     [HttpPost]
     [ProducesResponseType(typeof(ProductDTO), 201)]
     [ProducesResponseType(400)]
