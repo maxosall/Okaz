@@ -55,7 +55,9 @@ public class ProductEditBase : ComponentBase
      if (result is not null) NavigationManager.NavigateTo("/");
 
   }
+
   
+
   protected override async Task OnInitializedAsync()
   {
     try

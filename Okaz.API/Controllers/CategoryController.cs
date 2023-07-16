@@ -1,86 +1,108 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Okaz.API.Models.DTOs;
 using Okaz.API.Models.Repositories;
-using Okaz.Models;
 
-namespace Okaz.API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class CategoryController : ControllerBase
+namespace Okaz.API.Controllers
 {
-  private readonly ICategoryRepository _repository;
-
-  public CategoryController(ICategoryRepository repository)
+  [ApiController]
+  [Route("api/[controller]")]
+  public class CategoryController : ControllerBase
   {
-    _repository = repository;
-  }
+    private readonly ICategoryRepository _repository;
 
-  [HttpGet]
-  [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), 200)]
-  public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
-  {
-    var categories = await _repository.GetAll();
-    return Ok(categories);
-  }
-
-  [HttpGet("{id:int}")]
-  [ProducesResponseType(typeof(CategoryDetailsDTO), 200)]
-  [ProducesResponseType(404)]
-  public async Task<ActionResult<CategoryDetailsDTO>> GetCategoryById(int id)
-  {
-    try
+    public CategoryController(ICategoryRepository repository)
     {
-      var category = await _repository.GetByIdAsync(id);
-      if (category == null)
+      _repository = repository;
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), 200)]
+    public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
+    {
+      IEnumerable<CategoryDTO> categories = await _repository.GetAll();
+      return Ok(categories);
+    }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(CategoryDetailsDTO), 200)]
+    [ProducesResponseType(404)]
+    public async Task<ActionResult<CategoryDetailsDTO>> GetCategoryById(int id)
+    {
+      try
       {
-        return NotFound($"Category with id {id} not found.");
+        CategoryDetailsDTO category = await _repository.GetByIdAsync(id);
+        return category == null ? (ActionResult<CategoryDetailsDTO>)NotFound($"Category with id {id} not found.") : (ActionResult<CategoryDetailsDTO>)Ok(category);
       }
-      return Ok(category);
+      catch (Exception ex)
+      {
+        return StatusCode(500, $"Something went wrong: {ex.Message} ");
+      }
     }
-    catch (Exception ex)
-    {
-      return StatusCode(500, $"Something went wrong: {ex.Message} ");
-    }
-  }
 
-  [HttpPost]
-  [ProducesResponseType(typeof(Category), 201)]
-  [ProducesResponseType(400)]
-  public async Task<ActionResult<Category>> CreateCategory([Required] CategoryCreateDTO dto)
-  {
-    if (!ModelState.IsValid) return BadRequest(ModelState);
-    try
-    {
-      await _repository.AddAsync(dto);
-      return CreatedAtAction(
-        nameof(GetCategoryById), new { id = dto.CategoryId }, dto);
-    }
-    catch (Exception ex)
-    {
-      // _logger.LogError(ex, "An error occurred while creating a category");
-      return StatusCode(500, "An error occurred while creating a category");
-    }
-  }
 
-  [HttpPut("{id:int}")]
-  [ProducesResponseType(204)]
-  public async Task<IActionResult> UpdateCategory(int id, CategoryCreateDTO dto)
-  {
-    if (dto.CategoryId != id)
-    {
-      return BadRequest();
-    }
-    await _repository.Update(dto);
-    return NoContent();
-  }
 
-  [HttpDelete("{id:int}")]
-  public async Task<IActionResult> DeleteCategory(int id)
-  {
-    await _repository.DeleteByIdAsync(id);
-    return NoContent();
+    [HttpPost]
+    [ProducesResponseType(typeof(CategoryDTO), 201)]
+    [ProducesResponseType(400)]
+    public async Task<ActionResult<CategoryDTO>> CreateCategory(CategoryCreateDTO newCategory)
+    {
+      try
+      {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
+        if (newCategory == null)
+         return BadRequest($"{nameof(CategoryCreateDTO)} is null");
+        
+        bool categoryExists = await _repository.CheckForCategory(newCategory.Name);
+        if (categoryExists)
+          return BadRequest($"({newCategory.Name}) category name already exists");
+        
+        CategoryDTO category = await _repository.AddAsync(newCategory);
+        return CreatedAtAction(
+          nameof(GetCategoryById), new { id = category.CategoryId }, category);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, $"An Error occurred while creating a category, {ex.Message} ");
+      }
+    }
+
+    [HttpPut]
+    [ProducesResponseType(typeof(CategoryDTO), 204)]
+    public async Task<IActionResult> UpdateCategory(CategoryCreateDTO dto)
+    {
+      try
+      {
+        if (dto is null)
+         return BadRequest($"{nameof(CategoryCreateDTO)} is null");
+
+        var categoryToUpdate = await _repository.GetByIdAsync(dto.CategoryId);
+        if (categoryToUpdate is null)
+        {
+          return BadRequest($"No category with {dto.CategoryId} was found");
+        }
+
+        // if this category Name Already exists      
+        bool categoryExists = await _repository.CheckForCategory(dto.Name);
+        if (categoryExists){
+          return BadRequest($"({dto.Name}) category name already exists");
+        }
+
+        // if this category Name exists, Perform (Update)
+        var result =await _repository.Update(dto);
+        return Ok(result);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, $"An Error occurred while UPDADING a category, {ex.Message} ");
+      }
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+      await _repository.DeleteByIdAsync(id);
+      return NoContent();
+    }
   }
 }
-

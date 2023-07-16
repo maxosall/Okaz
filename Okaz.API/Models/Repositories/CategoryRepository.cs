@@ -23,6 +23,17 @@ public class CategoryRepository : ICategoryRepository
     return results;
   }
 
+  public async Task<bool> CheckForCategory(string categoryName)
+  {
+    // return await _context.Categories.Select(c => c.Name)
+    // .Any(c => string.Equals(c, categoryName, StringComparison.OrdinalIgnoreCase));
+
+
+    return await _context.Categories.AnyAsync(c => c.Name.ToLower() == categoryName.ToLower());
+
+  }
+
+
   // public async Task<Category> GetByIdAsync(int id)
   // {
   //   return await _context.Categories
@@ -38,28 +49,35 @@ public class CategoryRepository : ICategoryRepository
     var categoryDetailsDTO = _mapper.Map<CategoryDetailsDTO>(category);
     return categoryDetailsDTO;
   }
-  public async Task AddAsync(CategoryCreateDTO dto)
+  public async Task<CategoryDTO> AddAsync(CategoryCreateDTO dto)
   {
+    if (dto == null)
+      throw new ArgumentNullException(nameof(dto));
+
     var category = _mapper.Map<Category>(dto);
 
-    await _context.Categories.AddAsync(category);
-    _context.SaveChangesAsync();
+    var result = await _context.Categories.AddAsync(category);
+    await _context.SaveChangesAsync();
+    return _mapper.Map<CategoryDTO>(result.Entity);
+
   }
 
 
-  public async Task Update(CategoryCreateDTO dto)
+  public async Task<CategoryDTO> Update(CategoryCreateDTO dto)
   {
     if (dto == null) throw new ArgumentNullException(nameof(dto));
 
-    var category = _mapper.Map<Category>(dto);
+    var category = await _context.Categories.FindAsync(dto.CategoryId);
 
     if (category == null)
       throw new InvalidOperationException("Failed to map CategoryCreateDTO to Category");
-
-    _context.Categories.Attach(category);
-    _context.Entry(category).State = EntityState.Modified;
-
+      
+    _mapper.Map(dto, category);
+    _context.Categories.Update(category);
     await _context.SaveChangesAsync();
+
+    return _mapper.Map<CategoryDTO>(category);
+
   }
 
   public async Task DeleteByIdAsync(int id)

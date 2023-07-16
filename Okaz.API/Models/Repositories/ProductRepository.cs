@@ -43,7 +43,7 @@ public class ProductRepository : IProductRepository
       await _context.SaveChangesAsync();
       return _mapper.Map<ProductDTO>(product);
     }
-    return null;  
+    return null;
   }
 
   public async Task<IEnumerable<ProductDTO>> GetAll()
@@ -75,8 +75,9 @@ public class ProductRepository : IProductRepository
     if (product == null) return null;
 
     _mapper.Map(dto, product);
-
+    _context.Products.Update(product);
     await _context.SaveChangesAsync();
+    
     return _mapper.Map<ProductDTO>(product);
   }
 

@@ -11,9 +11,11 @@ public interface ICategoryRepository
 
   Task<CategoryDetailsDTO> GetByIdAsync(int id);
 
-  Task AddAsync(CategoryCreateDTO entity);
+  Task<bool> CheckForCategory(string categoryName);
 
-  Task Update(CategoryCreateDTO entity);
+  Task<CategoryDTO> AddAsync(CategoryCreateDTO entity);
+
+  Task<CategoryDTO> Update(CategoryCreateDTO entity);
 
   Task DeleteByIdAsync(int id);
 }

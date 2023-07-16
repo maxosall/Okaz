@@ -1,4 +1,7 @@
-using System;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -56,4 +59,24 @@ public class CategoryService : ICategoryService
     }
   }
 
+  public async Task<CategoryDTO> CreateCategory(CategoryCreateDTO newCategory)
+  {
+    try{
+      var response = await _httpClient.PostAsJsonAsync<CategoryCreateDTO>("api/category", newCategory);
+      if (response.IsSuccessStatusCode)
+      {
+        var responseBody = await response.Content.ReadAsStreamAsync();
+        return await JsonSerializer.DeserializeAsync<CategoryDTO>(responseBody,
+          new JsonSerializerOptions
+          {
+            PropertyNameCaseInsensitive = true
+          });
+      }
+      return null;
+    }  
+    catch(Exception ex)
+    {
+      throw;
+    }
+  }
 }
