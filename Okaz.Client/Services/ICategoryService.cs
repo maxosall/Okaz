@@ -5,5 +5,5 @@ public interface ICategoryService
 {
   Task<IEnumerable<CategoryDTO>> GetCategories();
   Task<CategoryDetailsDTO> GetCategoyById(int id);
-  Task<CategoryDTO>(CategoryCreateDTO newCategory);
+  Task<CategoryDTO> CreateCategory(CategoryCreateDTO newCategory);
 }
