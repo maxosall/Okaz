@@ -23,21 +23,43 @@ namespace Okaz.API.Controllers
       return Ok(categories);
     }
 
+
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(CategoryDetailsDTO), 200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CategoryDetailsDTO>> GetCategoryById(int id)
     {
       try
       {
         CategoryDetailsDTO category = await _repository.GetByIdAsync(id);
-        return category == null ? (ActionResult<CategoryDetailsDTO>)NotFound($"Category with id {id} not found.") : (ActionResult<CategoryDetailsDTO>)Ok(category);
+        return category == null 
+        ? NotFound($"Category with id: ({id}) not found.") 
+        : Ok(category);
       }
       catch (Exception ex)
       {
         return StatusCode(500, $"Something went wrong: {ex.Message} ");
       }
     }
+
+
+    // [HttpGet("{id:int}")]
+    // [ProducesResponseType(typeof(CategoryDetailsDTO), 200)]
+    // [ProducesResponseType(404)]
+    // public async Task<ActionResult<CategoryDetailsDTO>> GetCategoryById(int id)
+    // {
+    //   try
+    //   {
+    //     CategoryDetailsDTO category = await _repository.GetByIdAsync(id);
+    //     return category == null 
+    //     ? (ActionResult<CategoryDetailsDTO>)NotFound($"Category with id {id} not found.") 
+    //     : (ActionResult<CategoryDetailsDTO>)Ok(category);
+    //   }
+    //   catch (Exception ex)
+    //   {
+    //     return StatusCode(500, $"Something went wrong: {ex.Message} ");
+    //   }
+    // }
 
 
 
@@ -79,7 +101,7 @@ namespace Okaz.API.Controllers
         var categoryToUpdate = await _repository.GetByIdAsync(dto.CategoryId);
         if (categoryToUpdate is null)
         {
-          return BadRequest($"No category with {dto.CategoryId} was found");
+          return BadRequest($"No category with ID: ({dto.CategoryId}) was found");
         }
 
         // if this category Name Already exists      
@@ -101,8 +123,19 @@ namespace Okaz.API.Controllers
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-      await _repository.DeleteByIdAsync(id);
-      return NoContent();
+      try
+      {        
+        var deleted = await _repository.DeleteByIdAsync(id);
+        if(deleted)
+        {
+          return Ok($"Category with ID: ({id}) is successfuly deleted.");
+        }
+        return NotFound($"Category with ID: ({id}) Does Not Exist.");
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, $"An Error occurred while DELETING a category,\n (Error Message)=>: {ex.Message} ");
+      }
     }
   }
 }

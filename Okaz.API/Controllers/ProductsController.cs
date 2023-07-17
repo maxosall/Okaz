@@ -20,8 +20,14 @@ namespace Okaz.API.Controllers
     [ProducesResponseType(typeof(IEnumerable<ProductDTO>), 200)]
     public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
     {
-      var products = await _repository.GetAll();
-      return Ok(products);
+      try{
+        var products = await _repository.GetAll();
+        return Ok(products);
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, $"An error occurred while RETRIEVING Products: {ex.Message} ");
+      }
     }
 
     [ProducesResponseType(typeof(ProductDTO), 200)]
@@ -29,11 +35,18 @@ namespace Okaz.API.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
-      var product = await _repository.GetByIdAsync(id);
+      try{
+        var product = await _repository.GetByIdAsync(id);
 
-      if (product == null) return NotFound();
+        if (product == null) return NotFound();
 
-      return Ok(product);
+        return Ok(product);
+      }
+      catch (Exception ex)
+      {
+        // _logger.LogError(ex, "An error occurred while creating a category");
+        return StatusCode(500, $"An error occurred while RETRIEVING a Product: {ex.Message} ");
+      }
     }
 
     // [HttpPost]
@@ -70,7 +83,7 @@ namespace Okaz.API.Controllers
       catch (Exception ex)
       {
         // _logger.LogError(ex, "An error occurred while creating a category");
-        return StatusCode(500, $"An error occurred while creating a Product: {ex.Message} ");
+        return StatusCode(500, $"An error occurred while CREATING a Product: {ex.Message} ");
       }
     }
 
@@ -89,7 +102,7 @@ namespace Okaz.API.Controllers
       }
       catch (Exception ex)
       {
-        throw;
+        return StatusCode(500, $"An error occurred while DELETING a Product: {ex.Message} ");
       }
     }
 

@@ -17,6 +17,6 @@ public interface ICategoryRepository
 
   Task<CategoryDTO> Update(CategoryCreateDTO entity);
 
-  Task DeleteByIdAsync(int id);
+  Task<bool> DeleteByIdAsync(int id);
 }
 

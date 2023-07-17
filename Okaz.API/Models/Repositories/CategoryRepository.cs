@@ -71,7 +71,7 @@ public class CategoryRepository : ICategoryRepository
 
     if (category == null)
       throw new InvalidOperationException("Failed to map CategoryCreateDTO to Category");
-      
+
     _mapper.Map(dto, category);
     _context.Categories.Update(category);
     await _context.SaveChangesAsync();
@@ -80,13 +80,19 @@ public class CategoryRepository : ICategoryRepository
 
   }
 
-  public async Task DeleteByIdAsync(int id)
+  public async Task<bool> DeleteByIdAsync(int id)
   {
-    var category = await _context.Categories.FindAsync(id);
-    if (category != null)
+    
+    var categoryToDelete = await _context.Categories.FindAsync(id);
+
+    if (categoryToDelete == null)
     {
-      _context.Categories.Remove(category);
-      await _context.SaveChangesAsync();
+      return false; 
     }
+
+    _context.Categories.Remove(categoryToDelete);
+    await _context.SaveChangesAsync();
+    return true; 
+
   }
 }

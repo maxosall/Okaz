@@ -25,7 +25,7 @@ public class Product
     [ForeignKey("Category")]
     public int? CategoryId { get; set; }
 
-    public virtual Category Category { get; set; }
+    public virtual Category? Category { get; set; }
     public virtual ICollection<CartItem> CartItems { get; set; }
 }
 
