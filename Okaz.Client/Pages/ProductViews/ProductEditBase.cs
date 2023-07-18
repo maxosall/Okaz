@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Okaz.API.Models.DTOs;
 using Okaz.Client.Services;
+using Okaz.Client.Shared;
 
 namespace Okaz.Client.Pages.ProductViews;
 
@@ -18,6 +19,7 @@ public class ProductEditBase : ComponentBase
 
   public List<CategoryDTO> CategoryList { get; set; } = new();
 
+  public ConfirmationModel DeleteConfirmation{get;set;}
   public string? ErrorMessage { get; set; }
   public string CategoryId { get; set; }
   protected async Task HandleSubmit()
@@ -46,17 +48,34 @@ public class ProductEditBase : ComponentBase
     if (result != null) NavigationManager.NavigateTo("/");
 
   }
-  protected async Task HandleDeleteProduct()
-  {
-    ProductDTO result = null;
-    if(Product.ProductId != 0)
-      result = await ProductService.DeleteProduct(Product.ProductId);
+  // protected async Task HandleDeleteProduct()
+  // {
+  //   ProductDTO result = null;
+  //   if(Product.ProductId != 0)
+  //     result = await ProductService.DeleteProduct(Product.ProductId);
     
-     if (result is not null) NavigationManager.NavigateTo("/");
+  //    if (result is not null) NavigationManager.NavigateTo("/");
 
+  // }
+
+  protected void HandleDeleteProduct()
+  {
+    DeleteConfirmation.Show();
+    StateHasChanged();
   }
 
-  
+  protected async Task HandleConfirmDelete(bool deleteConfirmed)
+  {
+    if (deleteConfirmed)
+    {
+      ProductDTO result = null;
+
+      if(Product.ProductId != 0)
+        result = await ProductService.DeleteProduct(Product.ProductId);
+
+      if (result is not null) NavigationManager.NavigateTo("/");
+    }
+  }
 
   protected override async Task OnInitializedAsync()
   {
