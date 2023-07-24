@@ -14,7 +14,8 @@ public static class WebHostBuilderExtension
       profileAssemblyMarkerTypes: new[] 
       { 
         typeof(CategoryProfile), 
-        typeof(ProductProfile) 
+        typeof(ProductProfile) ,
+        typeof(ShoppingCartProfile)
       });
     return services;
   }

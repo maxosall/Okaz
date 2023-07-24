@@ -6,11 +6,11 @@ namespace Okaz.API.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class CategoryController : ControllerBase
+  public class CategoriesController : ControllerBase
   {
     private readonly ICategoryRepository _repository;
 
-    public CategoryController(ICategoryRepository repository)
+    public CategoriesController(ICategoryRepository repository)
     {
       _repository = repository;
     }

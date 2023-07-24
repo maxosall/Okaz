@@ -6,11 +6,11 @@ namespace Okaz.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CartsController : ControllerBase
+public class ShoppingCartsController : ControllerBase
 {
-  private readonly ICartRepository _repository;
+  private readonly IShoppingCartRepository _repository;
 
-  public CartsController(ICartRepository repository)
+  public ShoppingCartsController(IShoppingCartRepository repository)
   {
     _repository = repository ??
         throw new ArgumentNullException(nameof(repository));

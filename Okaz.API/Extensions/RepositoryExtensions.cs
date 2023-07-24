@@ -9,7 +9,7 @@ namespace Okaz.API.Extensions
     {
       _ = services.AddScoped<ICategoryRepository, CategoryRepository>();
       _ = services.AddScoped<IProductRepository, ProductRepository>();
-      _ = services.AddScoped<ICartRepository, CartRepository>();
+      _ = services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
       _ = services.AddScoped<ICartItemRepository, CartItemRepository>();
 
       return services;
