@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Okaz.API.Models.DTOs;
+using Okaz.API.Models.Interfaces;
 using Okaz.API.Models.Repositories;
 using Okaz.Models;
-using Okaz.API.Models.Interfaces;
 
 namespace Okaz.API.Controllers
 {
@@ -10,19 +10,19 @@ namespace Okaz.API.Controllers
   [Route("api/[controller]")]
   public class ProductsController : ControllerBase
   {
-    private readonly IProductRepository _repository;
-
-    public ProductsController(IProductRepository repository)
+    private readonly IUnitOfWork _uow;
+    public ProductsController(IUnitOfWork uow)
     {
-      _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+      _uow = uow ?? throw new ArgumentNullException(nameof(uow));
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ProductDTO>), 200)]
     public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
     {
-      try{
-        var products = await _repository.GetAll();
+      try
+      {
+        var products = await _uow.ProductRepository.GetAll();
         return Ok(products);
       }
       catch (Exception ex)
@@ -36,8 +36,9 @@ namespace Okaz.API.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
-      try{
-        var product = await _repository.GetByIdAsync(id);
+      try
+      {
+        var product = await _uow.ProductRepository.GetByIdAsync(id);
 
         if (product == null) return NotFound();
 
@@ -58,7 +59,7 @@ namespace Okaz.API.Controllers
     //   if (request is null) return BadRequest("No Product Provided");
     //   try
     //   {
-    //     var product = await _repository.AddAsync(request);
+    //     var product = await _uow.ProductRepository.AddAsync(request);
     //     return CreatedAtAction(
     //         nameof(GetProduct), new { id = product.ProductId }, product);
     //   }
@@ -77,7 +78,7 @@ namespace Okaz.API.Controllers
       if (!ModelState.IsValid) return BadRequest(ModelState);
       try
       {
-        var product = await _repository.AddAsync(request);
+        var product = await _uow.ProductRepository.AddAsync(request);
         return CreatedAtAction(
             nameof(GetProduct), new { id = product.ProductId }, product);
       }
@@ -93,12 +94,12 @@ namespace Okaz.API.Controllers
     {
       try
       {
-        var productToUpdate = await _repository.GetByIdAsync(product.ProductId);
+        var productToUpdate = await _uow.ProductRepository.GetByIdAsync(product.ProductId);
         if (productToUpdate == null)
         {
           return NotFound($"No product with {product.ProductId} was found");
         }
-        var updatedProduct = await _repository.Update(product);
+        var updatedProduct = await _uow.ProductRepository.Update(product);
         return Ok(updatedProduct);
       }
       catch (Exception ex)
@@ -110,12 +111,12 @@ namespace Okaz.API.Controllers
     [HttpDelete("{id}")]
     public async Task<ActionResult<ProductDTO>> DeleteProduct(int id)
     {
-      var product = await _repository.GetByIdAsync(id);
+      var product = await _uow.ProductRepository.GetByIdAsync(id);
       if (product == null)
       {
         return NotFound();
       }
-      await _repository.DeleteByIdAsync(id);
+      await _uow.ProductRepository.DeleteByIdAsync(id);
       return product;
     }
   }
