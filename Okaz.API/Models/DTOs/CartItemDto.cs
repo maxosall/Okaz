@@ -1,7 +1,7 @@
 namespace Okaz.API.Models.DTOs;
 
 public record CartItemDto(
-  int Id,
+  int CartItemId,
   int ProductId,
   int CartId,
   string ProductName,

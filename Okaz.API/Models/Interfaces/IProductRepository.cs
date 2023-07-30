@@ -1,7 +1,7 @@
 using Okaz.API.Models.DTOs;
 using Okaz.Models;
 
-namespace Okaz.API.Models.Repositories
+namespace Okaz.API.Models.Interfaces
 {
   public interface IProductRepository
   {

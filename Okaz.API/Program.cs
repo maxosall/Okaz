@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Okaz.API.Extensions;
 using Okaz.API.Models;
 using Okaz.API.Models.Repositories;
-using Okaz.API.Models.Repositories;
 using Okaz.API.Extensions;
+using Okaz.API.Models.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

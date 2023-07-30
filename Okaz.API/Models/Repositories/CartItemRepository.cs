@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Okaz.Models;
 using Okaz.API.Models;
-using Okaz.API.Models.Repositories;
+using Okaz.API.Models.Interfaces;
 
 namespace Okaz.API.Models.Repositories
 {

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Okaz.Models;
 using Okaz.API.Models.DTOs;
 
-namespace Okaz.API.Models.Repositories;
+namespace Okaz.API.Models.Interfaces;
 
 
 public interface ICategoryRepository

@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Okaz.API.Models.DTOs;
 using Okaz.Models;
+using Okaz.API.Models.Interfaces;
 
 namespace Okaz.API.Models.Repositories;
 
@@ -29,7 +30,8 @@ public class CategoryRepository : ICategoryRepository
     // .Any(c => string.Equals(c, categoryName, StringComparison.OrdinalIgnoreCase));
 
 
-    return await _context.Categories.AnyAsync(c => c.Name.ToLower() == categoryName.ToLower());
+    return await _context.Categories
+    .AnyAsync(c => c.Name.Trim().ToLower() == categoryName.Trim().ToLower());
 
   }
 

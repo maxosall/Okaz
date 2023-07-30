@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Okaz.API.Models.DTOs;
-using Okaz.API.Models.DTOs;
 
 namespace Okaz.API.Extensions;
 
