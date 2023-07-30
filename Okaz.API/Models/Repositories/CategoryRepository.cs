@@ -1,27 +1,22 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Okaz.API.Models.DTOs;
-using Okaz.Models;
 using Okaz.API.Models.Interfaces;
+using Okaz.Models;
 
 namespace Okaz.API.Models.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
   private readonly OkazDbContext _context;
-  private readonly IMapper _mapper;
-  public CategoryRepository(OkazDbContext context, IMapper mapper)
+  public CategoryRepository(OkazDbContext context)
   {
-    _mapper = mapper;
     _context = context;
   }
 
-  public async Task<IEnumerable<CategoryDTO>> GetAll()
+  public async Task<IEnumerable<Category>> GetAll()
   {
-    var categories = await _context.Categories
-    .ToListAsync();
-    var results = _mapper.Map<IEnumerable<CategoryDTO>>(categories);
-    return results;
+    return await _context.Categories.ToListAsync();
   }
 
   public async Task<bool> CheckForCategory(string categoryName)
@@ -42,59 +37,53 @@ public class CategoryRepository : ICategoryRepository
   //     .Include(c => c.Products)
   //     .FirstOrDefaultAsync(x => x.CategoryId == id);
   // }
-  public async Task<CategoryDetailsDTO> GetByIdAsync(int id)
+  public async Task<Category> GetByIdAsync(int id)
   {
     var category = await _context.Categories
       .Include(c => c.Products)
       .FirstOrDefaultAsync(c => c.CategoryId == id);
 
-    var categoryDetailsDTO = _mapper.Map<CategoryDetailsDTO>(category);
-    return categoryDetailsDTO;
+    return category;
   }
-  public async Task<CategoryDTO> AddAsync(CategoryCreateDTO dto)
+  public async Task<Category> AddAsync(Category categoryEntity)
   {
-    if (dto == null)
-      throw new ArgumentNullException(nameof(dto));
+    if (categoryEntity == null)
+      throw new ArgumentNullException(nameof(categoryEntity));
 
-    var category = _mapper.Map<Category>(dto);
-
-    var result = await _context.Categories.AddAsync(category);
-    await _context.SaveChangesAsync();
-    return _mapper.Map<CategoryDTO>(result.Entity);
+    var result = await _context.Categories.AddAsync(categoryEntity);
+    
+    return result.Entity;
 
   }
 
 
-  public async Task<CategoryDTO> Update(CategoryCreateDTO dto)
+  public async Task<Category> Update(Category entity)
   {
-    if (dto == null) throw new ArgumentNullException(nameof(dto));
+    if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-    var category = await _context.Categories.FindAsync(dto.CategoryId);
+    var category = await _context.Categories.FindAsync(entity.CategoryId);
 
     if (category == null)
       throw new InvalidOperationException("Failed to map CategoryCreateDTO to Category");
 
-    _mapper.Map(dto, category);
     _context.Categories.Update(category);
-    await _context.SaveChangesAsync();
-
-    return _mapper.Map<CategoryDTO>(category);
+    return category;
 
   }
 
   public async Task<bool> DeleteByIdAsync(int id)
   {
-    
+
     var categoryToDelete = await _context.Categories.FindAsync(id);
 
     if (categoryToDelete == null)
     {
-      return false; 
+      return false;
     }
 
     _context.Categories.Remove(categoryToDelete);
     await _context.SaveChangesAsync();
-    return true; 
+    return true;
 
   }
 }

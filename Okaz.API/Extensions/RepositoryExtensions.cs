@@ -8,7 +8,7 @@ namespace Okaz.API.Extensions
   {
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-      _ = services.AddScoped<ICategoryRepository, CategoryRepository>();
+      // _ = services.AddScoped<ICategoryRepository, CategoryRepository>();
       _ = services.AddScoped<IUnitOfWork, UnitOfWork>();
       // _ = services.AddScoped<IProductRepository, ProductRepository>();
       _ = services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();

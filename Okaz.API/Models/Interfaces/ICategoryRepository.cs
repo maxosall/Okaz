@@ -1,21 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using Okaz.Models;
 using Okaz.API.Models.DTOs;
+using Okaz.Models;
 
 namespace Okaz.API.Models.Interfaces;
 
 
 public interface ICategoryRepository
 {
-  Task<IEnumerable<CategoryDTO>> GetAll();
+  Task<IEnumerable<Category>> GetAll();
 
-  Task<CategoryDetailsDTO> GetByIdAsync(int id);
+  Task<Category> GetByIdAsync(int id);
 
   Task<bool> CheckForCategory(string categoryName);
 
-  Task<CategoryDTO> AddAsync(CategoryCreateDTO entity);
+  Task<Category> AddAsync(Category entity);
 
-  Task<CategoryDTO> Update(CategoryCreateDTO entity);
+  Task<Category> Update(Category entity);
 
   Task<bool> DeleteByIdAsync(int id);
 }

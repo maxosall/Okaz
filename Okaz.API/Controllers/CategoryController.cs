@@ -1,7 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Okaz.API.Models.DTOs;
-using Okaz.API.Models.Repositories;
 using Okaz.API.Models.Interfaces;
+using Okaz.API.Models.Repositories;
+using Okaz.Models;
 
 
 namespace Okaz.API.Controllers
@@ -10,33 +12,38 @@ namespace Okaz.API.Controllers
   [Route("api/[controller]")]
   public class CategoriesController : ControllerBase
   {
-    private readonly ICategoryRepository _repository;
-
-    public CategoriesController(ICategoryRepository repository)
+    private readonly IUnitOfWork _uow;
+    private readonly IMapper _mapper;
+    public CategoriesController(IUnitOfWork uow, IMapper mapper)
     {
-      _repository = repository;
+      _uow = uow;
+      _mapper = mapper;
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), 200)]
     public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
     {
-      IEnumerable<CategoryDTO> categories = await _repository.GetAll();
-      return Ok(categories);
+      var categories = await _uow.CategoryRepository.GetAll();
+      var response = _mapper.Map<IEnumerable<CategoryDTO>>(categories);
+
+      return Ok(response);
     }
 
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(CategoryDetailsDTO), 200)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<CategoryDetailsDTO>> GetCategoryById(int id)
+    public async Task<IActionResult> GetCategoryById(int id)
     {
       try
       {
-        CategoryDetailsDTO category = await _repository.GetByIdAsync(id);
-        return category == null 
-        ? NotFound($"Category with id: ({id}) not found.") 
-        : Ok(category);
+        var category = await _uow.CategoryRepository.GetByIdAsync(id);
+        var categoryDetailsDTO = _mapper.Map<CategoryDetailsDTO>(category);
+
+        return categoryDetailsDTO == null
+        ? NotFound($"Category with id: ({id}) not found.")
+        : Ok(categoryDetailsDTO);
       }
       catch (Exception ex)
       {
@@ -52,7 +59,7 @@ namespace Okaz.API.Controllers
     // {
     //   try
     //   {
-    //     CategoryDetailsDTO category = await _repository.GetByIdAsync(id);
+    //     CategoryDetailsDTO category = await _uow.CategoryRepository.GetByIdAsync(id);
     //     return category == null 
     //     ? (ActionResult<CategoryDetailsDTO>)NotFound($"Category with id {id} not found.") 
     //     : (ActionResult<CategoryDetailsDTO>)Ok(category);
@@ -68,22 +75,31 @@ namespace Okaz.API.Controllers
     [HttpPost]
     [ProducesResponseType(typeof(CategoryDTO), 201)]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<CategoryDTO>> CreateCategory(CategoryCreateDTO newCategory)
+    public async Task<IActionResult> CreateCategory(CategoryCreateDTO newCategory)
     {
       try
       {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        
+
         if (newCategory == null)
-         return BadRequest($"{nameof(CategoryCreateDTO)} is null");
-        
-        bool categoryExists = await _repository.CheckForCategory(newCategory.Name);
+          return BadRequest($"{nameof(CategoryCreateDTO)} is null");
+
+        bool categoryExists = await _uow.CategoryRepository.CheckForCategory(newCategory.Name);
         if (categoryExists)
           return BadRequest($"({newCategory.Name}) category name already exists");
-        
-        CategoryDTO category = await _repository.AddAsync(newCategory);
+
+
+        // Todo: Map CategoryCreateDTO -> Category  
+        var categoryEntity = _mapper.Map<Category>(newCategory);
+        var category = await _uow.CategoryRepository.AddAsync(categoryEntity);
+        await _uow.SaveAsync();
+
+        // Todo: Map Category -> CategoryDTO
+        var responseDto = _mapper.Map<CategoryDTO>(category);
         return CreatedAtAction(
-          nameof(GetCategoryById), new { id = category.CategoryId }, category);
+          nameof(GetCategoryById),
+          new { id = responseDto.CategoryId },
+          responseDto);
       }
       catch (Exception ex)
       {
@@ -93,28 +109,33 @@ namespace Okaz.API.Controllers
 
     [HttpPut]
     [ProducesResponseType(typeof(CategoryDTO), 204)]
-    public async Task<IActionResult> UpdateCategory(CategoryCreateDTO dto)
+    public async Task<IActionResult> UpdateCategory(CategoryCreateDTO requestDto)
     {
       try
       {
-        if (dto is null)
-         return BadRequest($"{nameof(CategoryCreateDTO)} is null");
+        if (requestDto is null)
+          return BadRequest($"{nameof(requestDto)} is null");
 
-        var categoryToUpdate = await _repository.GetByIdAsync(dto.CategoryId);
-        if (categoryToUpdate is null)
+        var categoryEntity = await _uow.CategoryRepository.GetByIdAsync(requestDto.CategoryId);
+        if (categoryEntity is null)
         {
-          return BadRequest($"No category with ID: ({dto.CategoryId}) was found");
+          return BadRequest($"No category with ID: ({requestDto.CategoryId}) was found");
         }
 
         // if this category Name Already exists      
-        bool categoryExists = await _repository.CheckForCategory(dto.Name);
-        if (categoryExists){
-          return BadRequest($"({dto.Name}) category name already exists");
+        bool categoryExists = await _uow.CategoryRepository
+          .CheckForCategory(requestDto.Name);
+        if (categoryExists)
+        {
+          return BadRequest($"({requestDto.Name}) category name already exists");
         }
 
         // if this category Name exists, Perform (Update)
-        var result =await _repository.Update(dto);
-        return Ok(result);
+        // 
+        _mapper.Map(requestDto, categoryEntity);
+        var result = await _uow.CategoryRepository.Update(categoryEntity);
+        var responseDto = _mapper.Map<CategoryDTO>(categoryEntity);
+        return Ok(responseDto);
       }
       catch (Exception ex)
       {
@@ -126,9 +147,9 @@ namespace Okaz.API.Controllers
     public async Task<IActionResult> DeleteCategory(int id)
     {
       try
-      {        
-        var deleted = await _repository.DeleteByIdAsync(id);
-        if(deleted)
+      {
+        var deleted = await _uow.CategoryRepository.DeleteByIdAsync(id);
+        if (deleted)
         {
           return Ok($"Category with ID: ({id}) is successfuly deleted.");
         }
