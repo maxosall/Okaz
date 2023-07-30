@@ -5,14 +5,14 @@ namespace Okaz.API.Models.Interfaces
 {
   public interface IProductRepository
   {
-    Task<IEnumerable<ProductDTO>> GetAll();
+    Task<IEnumerable<Product>> GetAll();
 
-    Task<ProductDTO> GetByIdAsync(int id);
+    Task<Product> GetByIdAsync(int id);
 
-    Task<ProductDTO> AddAsync(ProductCreateDTO entity);
+    Task<Product> AddAsync(Product entity);
 
-    Task<ProductDTO> Update(ProductCreateDTO entity);
+    Task<Product> Update(Product entity);
 
-    Task<ProductDTO> DeleteByIdAsync(int id);
+    Task<Product> DeleteByIdAsync(int id);
   }
 }

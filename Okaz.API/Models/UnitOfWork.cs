@@ -7,16 +7,15 @@ namespace Okaz.Okaz.API.Models;
 public class UnitOfWork : IUnitOfWork
 {
   private readonly OkazDbContext _context;
-  private readonly IMapper _mapper;
 
-  public UnitOfWork(OkazDbContext context, IMapper mapper)
+
+  public UnitOfWork(OkazDbContext context)
   {
     _context = context;
-    _mapper = mapper;
   }
 
   public IProductRepository ProductRepository
-    => new ProductRepository(_context, _mapper);
+    => new ProductRepository(_context);
 
   // public IProductRepository ProductRepository {get; }
   public async Task<bool> SaveAsync()

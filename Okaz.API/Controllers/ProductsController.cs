@@ -1,7 +1,7 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Okaz.API.Models.DTOs;
 using Okaz.API.Models.Interfaces;
-using Okaz.API.Models.Repositories;
 using Okaz.Models;
 
 namespace Okaz.API.Controllers
@@ -11,9 +11,11 @@ namespace Okaz.API.Controllers
   public class ProductsController : ControllerBase
   {
     private readonly IUnitOfWork _uow;
-    public ProductsController(IUnitOfWork uow)
+    private readonly IMapper _mapper;
+    public ProductsController(IUnitOfWork uow, IMapper mapper)
     {
       _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+      _mapper = mapper;
     }
 
     [HttpGet]
@@ -23,7 +25,8 @@ namespace Okaz.API.Controllers
       try
       {
         var products = await _uow.ProductRepository.GetAll();
-        return Ok(products);
+        var response = _mapper.Map<IEnumerable<ProductDTO>>(products);
+        return Ok(response);
       }
       catch (Exception ex)
       {
@@ -34,15 +37,15 @@ namespace Okaz.API.Controllers
     [ProducesResponseType(typeof(ProductDTO), 200)]
     [ProducesResponseType(404)]
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDTO>> GetProduct(int id)
+    public async Task<IActionResult> GetProduct(int id)
     {
       try
       {
+
         var product = await _uow.ProductRepository.GetByIdAsync(id);
+        var responseDto = _mapper.Map<ProductDTO>(product);
 
-        if (product == null) return NotFound();
-
-        return Ok(product);
+        return responseDto == null ? NotFound() : Ok(responseDto);
       }
       catch (Exception ex)
       {
@@ -75,12 +78,27 @@ namespace Okaz.API.Controllers
     [ProducesResponseType(400)]
     public async Task<ActionResult<ProductDTO>> CreateProduct(ProductCreateDTO request)
     {
-      if (!ModelState.IsValid) return BadRequest(ModelState);
+      if (!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+
       try
       {
-        var product = await _uow.ProductRepository.AddAsync(request);
+
+        // Todo: map ProductCreateDTO -> Product
+        var productRequestDto = _mapper.Map<Product>(request);
+
+        var newProduct = await _uow.ProductRepository.AddAsync(productRequestDto);
+        await _uow.SaveAsync();
+
+        // Todo: map  Product -> ProductDTO
+        var responseDto = _mapper.Map<ProductDTO>(newProduct);
+
         return CreatedAtAction(
-            nameof(GetProduct), new { id = product.ProductId }, product);
+            nameof(GetProduct),
+            new { id = responseDto.ProductId },
+            responseDto);
       }
       catch (Exception ex)
       {
@@ -90,17 +108,28 @@ namespace Okaz.API.Controllers
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateProduct(ProductCreateDTO product)
+    public async Task<IActionResult> UpdateProduct(ProductCreateDTO productDto)
     {
       try
       {
-        var productToUpdate = await _uow.ProductRepository.GetByIdAsync(product.ProductId);
-        if (productToUpdate == null)
+        if (productDto is null)
+          return BadRequest($"{nameof(productDto)} is null");
+
+        var productEntity = await _uow.ProductRepository.GetByIdAsync(productDto.ProductId);
+        if (productEntity == null)
         {
-          return NotFound($"No product with {product.ProductId} was found");
+          return NotFound($"No product with {productDto.ProductId} was found");
         }
-        var updatedProduct = await _uow.ProductRepository.Update(product);
-        return Ok(updatedProduct);
+
+        // Todo: Map ProductCreateDTO -> Product
+        _mapper.Map(productDto, productEntity);
+        var updatedProduct = await _uow.ProductRepository.Update(productEntity);
+        await _uow.SaveAsync();
+
+        // Todo: Map Product -> ProductDTO
+
+        var responseDto = _mapper.Map<ProductDTO>(productEntity);
+        return Ok(responseDto);
       }
       catch (Exception ex)
       {
@@ -112,12 +141,15 @@ namespace Okaz.API.Controllers
     public async Task<ActionResult<ProductDTO>> DeleteProduct(int id)
     {
       var product = await _uow.ProductRepository.GetByIdAsync(id);
-      if (product == null)
+      if (product is null)
       {
         return NotFound();
       }
       await _uow.ProductRepository.DeleteByIdAsync(id);
-      return product;
+      await _uow.SaveAsync();
+
+      // Todo: Map Produc -> ProductDTO
+      return _mapper.Map<ProductDTO>(product);
     }
   }
 }
