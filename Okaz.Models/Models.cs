@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Okaz.Models;
@@ -26,7 +26,7 @@ public class Product
     public int? CategoryId { get; set; }
 
     public virtual Category? Category { get; set; }
-    public virtual ICollection<CartItem> CartItems { get; set; }
+    public virtual ICollection<CartItem>? CartItems { get; set; }
 }
 
 
@@ -59,6 +59,7 @@ public class Cart
 {
     [Key]
     public int CartId { get; set; }
+    [ForeignKey("User")]
     public int UserId { get; }
 
     public virtual User User { get; set; }
@@ -74,9 +75,11 @@ public class CartItem
    	[Required]
    	public int Quantity {get; set; }
 
+    [ForeignKey("Product")]
    	public int ProductId {get; set; }
    	public virtual Product Product {get; set;}
 
+    [ForeignKey("Cart")]
    	public int CartId {get; set; }
    	public virtual Cart Cart {get; set;}
 }

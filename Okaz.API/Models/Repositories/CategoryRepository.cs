@@ -30,6 +30,7 @@ public class CategoryRepository : ICategoryRepository
 
   }
 
+  
 
   // public async Task<Category> GetByIdAsync(int id)
   // {
@@ -61,13 +62,13 @@ public class CategoryRepository : ICategoryRepository
   {
     if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-    var category = await _context.Categories.FindAsync(entity.CategoryId);
+    var existingCategory = await _context.Categories.FindAsync(entity.CategoryId);
 
-    if (category == null)
-      throw new InvalidOperationException("Failed to map CategoryCreateDTO to Category");
+    if (existingCategory == null)
+      throw new InvalidOperationException("The category to update does not exist");
 
-    _context.Categories.Update(category);
-    return category;
+    var result = _context.Categories.Update(existingCategory);
+    return result.Entity;
 
   }
 

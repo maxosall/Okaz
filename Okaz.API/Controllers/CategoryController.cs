@@ -125,7 +125,7 @@ namespace Okaz.API.Controllers
         // if this category Name Already exists      
         bool categoryExists = await _uow.CategoryRepository
           .CheckForCategory(requestDto.Name);
-        if (categoryExists)
+        if (categoryExists )
         {
           return BadRequest($"({requestDto.Name}) category name already exists");
         }
